@@ -2,7 +2,7 @@
   "name": "customviewer",
   "displayName": "%extension.displayName%",
   "description": "%extension.description%",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "publisher": "taogya",
   "license": "BSD-3-Clause",
   "repository": {
@@ -20,7 +20,8 @@
     "onCommand:customViewer.openDefaultPreview",
     "onCommand:customViewer.chooseRendererPreview",
     "onCommand:customViewer.openRendererStandalone",
-    "onCommand:customViewer.rerenderPreview"
+    "onCommand:customViewer.rerenderPreview",
+    "onCommand:customViewer.openSettings"
   ],
   "capabilities": {
     "untrustedWorkspaces": {
@@ -37,12 +38,20 @@
       {
         "command": "customViewer.openDefaultPreview",
         "title": "%commands.openDefaultPreview.title%",
-        "category": "%commands.category%"
+        "category": "%commands.category%",
+        "icon": {
+          "light": "media/open-preview-light.svg",
+          "dark": "media/open-preview-dark.svg"
+        }
       },
       {
         "command": "customViewer.chooseRendererPreview",
         "title": "%commands.chooseRendererPreview.title%",
-        "category": "%commands.category%"
+        "category": "%commands.category%",
+        "icon": {
+          "light": "media/choose-renderer-light.svg",
+          "dark": "media/choose-renderer-dark.svg"
+        }
       },
       {
         "command": "customViewer.openRendererStandalone",
@@ -52,6 +61,11 @@
       {
         "command": "customViewer.rerenderPreview",
         "title": "%commands.rerenderPreview.title%",
+        "category": "%commands.category%"
+      },
+      {
+        "command": "customViewer.openSettings",
+        "title": "%commands.openSettings.title%",
         "category": "%commands.category%"
       }
     ],

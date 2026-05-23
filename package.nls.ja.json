@@ -7,6 +7,7 @@
   "commands.chooseRendererPreview.title": "CustomViewer: レンダラーを選んでプレビューを開く",
   "commands.openRendererStandalone.title": "CustomViewer: レンダラーを単独起動する",
   "commands.rerenderPreview.title": "CustomViewer: プレビューを再描画する",
+  "commands.openSettings.title": "CustomViewer: 設定を開く",
   "configuration.title": "CustomViewer",
   "configuration.extensionRendererMap.markdownDescription": "正規化した拡張子を、優先順付きのレンダラー定義へ対応付けます。各エントリには `id` と `path` が必要です。",
   "configuration.rendererRoots.markdownDescription": "`by-extension/<extension>/<renderer-id>/` 規約でレンダラー探索を行うルートフォルダを、順序付きで指定します。"

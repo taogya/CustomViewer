@@ -34,6 +34,8 @@ CustomViewer の設定は **ワークスペース** または **ユーザー** �
 
 `path` は **絶対パス** または `${workspaceFolder}` 始まりでなければなりません。`./renderers/my-md` のような相対パスは無効です。
 
+設定 UI をすぐ開きたい場合は、コマンドパレットから **CustomViewer: 設定を開く** を実行してください。
+
 > サンプルを試すなら、[../../../examples/settings/workspace.settings.jsonc](../../../examples/settings/workspace.settings.jsonc) の内容をそのままコピーすれば `.md` / `.json` / `.c` のサンプルが一度に有効になります。
 
 ## 4. ファイルを開いてプレビュー
@@ -42,8 +44,6 @@ CustomViewer の設定は **ワークスペース** または **ユーザー** �
 2. `Cmd+Alt+V`(macOS)または `Ctrl+Alt+V`(Windows/Linux)を押します。
 
 エディタの隣にプレビュータブが開きます。
-
-![エディタ横にプレビュー](../images/quickstart.png)
 
 ## 5. ファイルを編集したあと
 

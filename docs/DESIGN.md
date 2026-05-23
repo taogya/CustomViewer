@@ -2,7 +2,7 @@
 
 ## 1. 文書位置づけ
 
-本書は CustomViewer MVP の実装可能な基本設計を定義する文書である。要求の正本は [docs/README.md](docs/README.md) とし、本書はそれを満たすための構成、データ契約、処理方式、テスト方式を記述する。
+本書は CustomViewer MVP の実装可能な基本設計を定義する文書である。要求の正本は [README.md](./README.md) とし、本書はそれを満たすための構成、データ契約、処理方式、テスト方式を記述する。
 
 実行順やフェーズ分解は本書では扱わない。作業計画、進捗、次アクションは `.github/state/work-items/` と `.github/state/active-work.md` で管理する。
 
@@ -17,7 +17,7 @@
 - 異常系と信頼モデル: FR-020 から FR-025
 - examples とトレーサビリティ: FR-026 から FR-031
 - 品質要求: NFR-001 から NFR-009
-- 受入条件: AC-001 から AC-014
+- 受入条件: AC-001 から AC-016
 
 本設計は以下を対象とする。
 
@@ -232,21 +232,26 @@ interface PreviewPayload {
 
 ### 5.5 WebView メッセージ契約
 
-関連要求: FR-016 から FR-019, FR-024, FR-025
+関連要求: FR-016 から FR-019, FR-024, FR-025, FR-032
 
-MVP では特権 API を公開しないため、双方向契約は最小限に限定する。
+MVP では広範な特権 API は公開しないため、双方向契約は最小限に限定する。
 
 ```ts
 type WebviewToHostMessage =
   | { type: "renderer-ready" }
-  | { type: "renderer-log"; level: "info" | "warn" | "error"; message: string };
+  | { type: "renderer-log"; level: "info" | "warn" | "error"; message: string }
+  | { type: "open-link"; href: string }
+  | { type: "resolve-image"; requestId: string; href: string };
 
 type HostToWebviewMessage =
   | { type: "bootstrap"; payload: PreviewPayload }
-  | { type: "rerender"; payload: PreviewPayload };
+  | { type: "rerender"; payload: PreviewPayload }
+  | { type: "resolve-image-result"; requestId: string; resolvedUri: string | null };
 ```
 
 `renderer-ready` を受けたあとに host が `bootstrap` を送る。これにより inline script を使わず初期データを渡せる。
+`open-link` と `resolve-image` は sourceUri 文脈に限定した補助 API であり、任意ファイルアクセス用途には使えないよう host 側で境界を持つ。
+`open-link` は、対象が現在の renderer で安全に扱える source-relative text target なら現在の `PreviewRequest` を差し替えて同一パネルへ `rerender` を返し、対象外は外部起動またはエディタ起動へ fallback する。
 
 ## 6. コンポーネント設計
 
@@ -314,13 +319,14 @@ type HostToWebviewMessage =
 
 ### 6.5 Preview Session Manager
 
-関連要求: FR-012 から FR-019, AC-003, AC-004, AC-005
+関連要求: FR-012 から FR-019, FR-032, AC-003, AC-004, AC-005, AC-015, AC-016
 
 責務:
 
 - パネル生成 / 再利用 / reveal
 - パネルごとの `PreviewRequest` と最新 `PreviewPayload` の保持
 - 手動再描画時の saved content 再取得
+- source-relative text link の同一パネル遷移、fallback 起動、image 解決リクエストの仲介
 
 パネルキー:
 
@@ -329,10 +335,11 @@ panelKey = `${renderer.id}|${launchMode}|${sourceUri?.toString() ?? "standalone"
 ```
 
 MVP では `retainContextWhenHidden` は使わない。再表示時は webview 側が再度 `renderer-ready` を送り、host が最新 payload を返す。
+host 媒介で sourceUri が切り替わる場合は、セッションが保持する `PreviewRequest`、パネルタイトル、再利用用キー、`localResourceRoots` を新しい target に合わせて更新する。
 
 ### 6.6 WebView Document Builder
 
-関連要求: FR-008, FR-011, FR-025
+関連要求: FR-008, FR-011, FR-025, FR-032
 
 責務:
 
@@ -356,6 +363,7 @@ connect-src 'none';
 
 - 拡張 `media/`
 - 対象 renderer root
+- 必要時に限り、source document 文脈で許可された local image 参照 root
 
 ### 6.7 Error Reporter
 
@@ -461,11 +469,11 @@ examples/
 
 ### 8.2 Markdown sample renderer
 
-関連要求: FR-028, AC-010
+関連要求: FR-028, FR-032, AC-010, AC-015, AC-016
 
 - 入力: Markdown 生テキスト
 - 表示: 見出しごとのセクションカード
-- UI: 左ナビゲーション、検索ボックス
+- UI: 左ナビゲーション、検索ボックス、source-relative document link の同一パネル遷移、local image 表示
 
 ### 8.3 JSON sample renderer
 
@@ -500,18 +508,18 @@ examples/
 
 ### 9.2 推奨テストファイル
 
-関連要求: AC-001 から AC-014
+関連要求: AC-001 から AC-016
 
 - `test/suite/configuration.test.ts`
   - FR-001 から FR-007
 - `test/suite/rendererResolver.test.ts`
   - FR-005, FR-008 から FR-011, AC-001 から AC-003
 - `test/suite/previewManager.test.ts`
-  - FR-012 から FR-019, AC-004, AC-005
+  - FR-012 から FR-019, FR-032, AC-004, AC-005, AC-015, AC-016
 - `test/suite/workspaceTrust.test.ts`
   - FR-022, FR-023, AC-006, AC-007
 - `test/suite/examplesMarkdown.test.ts`
-  - FR-028, AC-010
+  - FR-028, FR-032, AC-010, AC-015, AC-016
 - `test/suite/examplesJson.test.ts`
   - FR-029, AC-011
 - `test/suite/examplesC.test.ts`

@@ -7,6 +7,7 @@
   "commands.chooseRendererPreview.title": "CustomViewer: Choose Renderer Preview",
   "commands.openRendererStandalone.title": "CustomViewer: Open Renderer Standalone",
   "commands.rerenderPreview.title": "CustomViewer: Rerender Preview",
+  "commands.openSettings.title": "CustomViewer: Open Settings",
   "configuration.title": "CustomViewer",
   "configuration.extensionRendererMap.markdownDescription": "Maps normalized file extensions to ordered renderer entries. Each entry must include `id` and `path`.",
   "configuration.rendererRoots.markdownDescription": "Lists renderer root folders used for convention-based discovery under `by-extension/<extension>/<renderer-id>/`."

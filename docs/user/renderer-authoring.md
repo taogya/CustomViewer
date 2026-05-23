@@ -58,6 +58,29 @@ The `payload` object contains:
 
 You can also call `window.CustomViewerHost.getPayload()` at any time to get the latest payload, or `window.CustomViewerHost.postLog("info", "...")` to write to the VS Code output log.
 
+For renderers that turn saved text into clickable links or image elements, two narrow helper APIs are also available:
+
+| Helper | Description |
+| --- | --- |
+| `window.CustomViewerHost.openLink(href)` | Ask the host to handle a source-relative document link or an external URL. Supported source-relative text targets may rerender the current preview. Other targets may fall back to the editor or external open. |
+| `window.CustomViewerHost.resolveImage(href)` | Resolve a source-relative image path into a WebView-safe URL. Returns `Promise<string \| null>`. |
+
+Example:
+
+```js
+const imageUrl = await window.CustomViewerHost.resolveImage("./images/overview.png");
+if (imageUrl) {
+  document.querySelector("img").src = imageUrl;
+}
+
+document.querySelector("a[data-doc]")?.addEventListener("click", (event) => {
+  event.preventDefault();
+  window.CustomViewerHost.openLink("./README.md");
+});
+```
+
+These helpers are intentionally limited. They do not expose general file system access or arbitrary VS Code APIs.
+
 ## Optional `renderer.json`
 
 Add a `renderer.json` next to `index.html` if you want a friendly name in the picker:

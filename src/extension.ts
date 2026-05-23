@@ -14,6 +14,7 @@ export function activate(context: vscode.ExtensionContext): void {
     extensionUri: context.extensionUri,
     window: vscode.window,
     getIsTrusted: () => vscode.workspace.isTrusted,
+    getWorkspaceFolder: uri => vscode.workspace.getWorkspaceFolder(uri),
     resolveForExtension: async (extension, resource, isTrusted) => {
       const configuration = readEffectiveConfiguration(resource, isTrusted, vscode.workspace);
       return resolveRenderersForExtension({
@@ -36,6 +37,18 @@ export function activate(context: vscode.ExtensionContext): void {
       });
     },
     readTextFile: async (uri: vscode.Uri) => decoder.decode(await vscode.workspace.fs.readFile(uri)),
+    resourceExists: async (uri: vscode.Uri) => {
+      try {
+        await vscode.workspace.fs.stat(uri);
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    openTextDocument: async (uri: vscode.Uri) => {
+      await vscode.window.showTextDocument(uri, { preview: false });
+    },
+    openExternal: uri => vscode.env.openExternal(uri),
     buildDocument: buildPreviewDocument,
     log: (message, level = "info") => {
       const prefix = `[CustomViewer:${level}]`;

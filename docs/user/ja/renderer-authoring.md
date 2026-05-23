@@ -58,6 +58,29 @@ window.addEventListener("custom-viewer:update", (event) => {
 
 いつでも `window.CustomViewerHost.getPayload()` で最新 payload を取得でき、`window.CustomViewerHost.postLog("info", "...")` で VS Code 出力ログに書き出せます。
 
+保存済みテキストからリンクや画像を組み立てるレンダラー向けに、次の限定 API も使えます。
+
+| ヘルパー | 説明 |
+| --- | --- |
+| `window.CustomViewerHost.openLink(href)` | ソース文書基準の相対リンク、または外部 URL をホスト側で処理します。対応可能な相対テキスト target は現在のプレビューを再描画し、それ以外はエディタ表示や外部起動へ fallback します。 |
+| `window.CustomViewerHost.resolveImage(href)` | ソース文書基準の相対画像パスを WebView で使える URL に変換します。戻り値は `Promise<string \| null>` です。 |
+
+例:
+
+```js
+const imageUrl = await window.CustomViewerHost.resolveImage("./images/overview.png");
+if (imageUrl) {
+  document.querySelector("img").src = imageUrl;
+}
+
+document.querySelector("a[data-doc]")?.addEventListener("click", (event) => {
+  event.preventDefault();
+  window.CustomViewerHost.openLink("./README.md");
+});
+```
+
+これらは意図的に範囲を絞った API です。汎用のファイルシステムアクセスや任意の VS Code API を公開するものではありません。
+
 ## 任意の `renderer.json`
 
 選択 UI に分かりやすい名前を出したい場合は、`index.html` の隣に `renderer.json` を置きます。

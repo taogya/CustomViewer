@@ -16,6 +16,13 @@ The renderer host stays read only in the MVP and focuses on safe previews.
 Each renderer folder must contain `index.html` and may contain `renderer.json`.
 The host passes the saved file content, extension, file name, and launch mode.
 
+## Formatting Tour
+
+Read the [renderer authoring guide](../../docs/user/renderer-authoring.md) for the full contract.
+This paragraph shows **strong text**, *emphasis*, `inline code`, and an external link to [VS Code Webviews](https://code.visualstudio.com/api/extension-guides/webview).
+
+![Overview image](../../docs/user/images/overview.png)
+
 ## Commands
 
 ### Open Default Preview

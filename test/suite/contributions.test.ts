@@ -17,7 +17,8 @@ suite("package contributions", () => {
       "customViewer.openDefaultPreview",
       "customViewer.chooseRendererPreview",
       "customViewer.openRendererStandalone",
-      "customViewer.rerenderPreview"
+      "customViewer.rerenderPreview",
+      "customViewer.openSettings"
     ]);
 
     assert.ok(packageJson.contributes.configuration.properties["customViewer.extensionRendererMap"]);
@@ -42,7 +43,8 @@ suite("package contributions", () => {
         { title: "%commands.openDefaultPreview.title%", category: "%commands.category%" },
         { title: "%commands.chooseRendererPreview.title%", category: "%commands.category%" },
         { title: "%commands.openRendererStandalone.title%", category: "%commands.category%" },
-        { title: "%commands.rerenderPreview.title%", category: "%commands.category%" }
+        { title: "%commands.rerenderPreview.title%", category: "%commands.category%" },
+        { title: "%commands.openSettings.title%", category: "%commands.category%" }
       ]
     );
     assert.strictEqual(packageJson.contributes.configuration.title, "%configuration.title%");
@@ -64,6 +66,7 @@ suite("package contributions", () => {
       "commands.chooseRendererPreview.title",
       "commands.openRendererStandalone.title",
       "commands.rerenderPreview.title",
+      "commands.openSettings.title",
       "configuration.title",
       "configuration.extensionRendererMap.markdownDescription",
       "configuration.rendererRoots.markdownDescription"

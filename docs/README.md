@@ -97,6 +97,7 @@ MVP では、明示マッピング方式と規約ベース探索方式の両方�
 - 手動再描画
 - ワークスペース信頼と WebView 制約を含むセキュリティ統制
 - Local / Remote 環境での同一実行環境側配置ルール
+- Markdown サンプル renderer における source-relative document link 起動と local image 表示
 - examples 配下の renderer / source / settings サンプル提供
 - 自動テストによる要求適合性確認
 - 実装コードとテストコードへの要求 ID トレーサビリティ付与
@@ -177,7 +178,7 @@ MVP では、明示マッピング方式と規約ベース探索方式の両方�
 | FR-021 | index.html 不在、パス不正、資産参照不可、同一実行環境側配置違反などの異常は、原因と対象パスが分かる形で通知しなければならない。 | サイレント失敗を禁止する。 |
 | FR-022 | 拡張機能は Workspace Trust を limited サポートで宣言し、Restricted Mode ではワークスペース設定由来の renderer 設定とワークスペース配下 renderer の実行を無効化しなければならない。 | restrictedConfigurations の対象に renderer 関連設定を含める。 |
 | FR-023 | Restricted Mode でも、ユーザー設定由来であり、かつワークスペース外かつ同一実行環境側に存在する renderer は利用可能でなければならない。 | ユーザー管理資産の再利用を確保する。 |
-| FR-024 | MVP では renderer からホストへの特権 API を公開してはならない。 | ファイル編集、任意コマンド実行、シェル実行、任意ファイルアクセスは禁止。 |
+| FR-024 | MVP では renderer からホストへの広範な特権 API を公開してはならない。 | ファイル編集、任意コマンド実行、シェル実行、任意ファイルアクセスは禁止し、source-relative link 起動と image 解決のような限定用途だけを許可対象とする。 |
 | FR-025 | WebView は外部ネットワーク、インラインスクリプト、不要な外部資産読込を既定で許可してはならない。 | CSP と localResourceRoots を最小権限で構成する。 |
 
 ### 9.6 examples とトレーサビリティ
@@ -190,6 +191,7 @@ MVP では、明示マッピング方式と規約ベース探索方式の両方�
 | FR-029 | JSON 用 renderer サンプルは、リッチ表示、対象要素のフィルタ、検索機能を提供しなければならない。 | 配列要素またはオブジェクト要素を対象に絞り込めること。 |
 | FR-030 | C 言語用 renderer サンプルは、関数一覧表示と、関数単位の折りたたみ展開表示を提供しなければならない。 | 関数ナビゲーションと本文確認を両立する。 |
 | FR-031 | 実装コードおよび自動テストコードには、関連する要求 ID および受入条件 ID をコメントで明示しなければならない。 | 少なくとも FR-xxx、AC-xxx を検索可能な形で残す。 |
+| FR-032 | Markdown 用 renderer サンプルは、sourceUri を基準にした source-relative document link の同一プレビュー遷移または fallback 起動と local image 表示を、ホスト媒介で提供できなければならない。 | 解決対象はアクティブ source document の文脈に限定し、現在の renderer で扱えない対象は fallback を許容する。 |
 
 ## 10. 非機能要求
 
@@ -223,6 +225,8 @@ MVP では、明示マッピング方式と規約ベース探索方式の両方�
 | AC-012 | C 言語サンプル renderer は、サンプル C ソースを表示した際に関数一覧を示し、各関数本体を折りたたみ展開できる。 |
 | AC-013 | 自動テストは、少なくとも FR-005、FR-012 から FR-019、FR-028 から FR-030 の期待挙動を検証する。 |
 | AC-014 | 実装コードとテストコードの双方で、関連する FR-xxx / AC-xxx コメントを検索できる。 |
+| AC-015 | Markdown サンプル renderer は、サンプル Markdown に含まれる source-relative document link を選択した際、現在の renderer で扱える text target なら同一プレビューセッション内で表示更新し、対象外は VS Code エディタで開ける。 |
+| AC-016 | Markdown サンプル renderer は、サンプル Markdown に含まれる source-relative image 参照を、解決可能な場合はプレビュー内に表示できる。 |
 
 ## 12. 設計への引き渡し事項
 

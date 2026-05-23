@@ -34,6 +34,8 @@ Add to your workspace settings (`.vscode/settings.json`):
 
 The `path` value must be either an **absolute path** or start with `${workspaceFolder}`. Plain relative paths like `./renderers/my-md` are not accepted.
 
+If you want to jump straight to the settings UI, run **CustomViewer: Open Settings** from the Command Palette.
+
 > Trying the samples? Copy [../../examples/settings/workspace.settings.jsonc](../../examples/settings/workspace.settings.jsonc) into your settings — it wires up the `.md`, `.json`, and `.c` samples at once.
 
 ## 4. Open a file and preview it
@@ -42,8 +44,6 @@ The `path` value must be either an **absolute path** or start with `${workspaceF
 2. Press `Cmd+Alt+V` (macOS) or `Ctrl+Alt+V` (Windows/Linux).
 
 A preview tab opens beside the editor.
-
-![Preview opened beside the editor](./images/quickstart.png)
 
 ## 5. After you edit a file
 

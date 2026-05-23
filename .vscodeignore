@@ -10,7 +10,7 @@ node_modules/.cache/**
 tmp/**
 .vscode/**
 *.log
-out/**
+out/test/**
 .vscode-test/**
 .vscode-test.mjs
 .DS_Store

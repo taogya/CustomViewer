@@ -38,3 +38,5 @@ examples/
 2. Copy the contents of `examples/settings/workspace.settings.jsonc` into workspace settings.
 3. Open one of the files under `examples/sources/`.
 4. Launch the matching CustomViewer preview command.
+
+With the bundled Markdown sample, source-relative Markdown links can move within the same preview when the current renderer can handle the target. Unsupported targets fall back to the editor.

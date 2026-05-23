@@ -4,6 +4,8 @@
 
 CustomViewer exposes two settings. Most users only need the first one.
 
+To jump here directly inside VS Code, run **CustomViewer: Open Settings** from the Command Palette.
+
 ## `customViewer.extensionRendererMap`
 
 Map a file extension to one or more preview folders. Each folder must contain an `index.html`.
@@ -67,12 +69,14 @@ In remote workspaces (SSH, Dev Containers, WSL, Codespaces), the preview folder 
 
 CustomViewer runs HTML/CSS/JS that you point it at, so it respects [VS Code Workspace Trust](https://code.visualstudio.com/docs/editor/workspace-trust).
 
+Think of Restricted Mode as "open first, trust later." It is most useful when you want to inspect an unfamiliar repository without immediately letting its workspace-provided preview code run.
+
 | Workspace mode | What CustomViewer does |
 | --- | --- |
 | **Trusted** | All settings and preview folders work, including ones inside the workspace. |
 | **Restricted Mode** | Workspace-level settings are ignored. Preview folders located **inside** the workspace are blocked. Preview folders defined in your **user** settings and located **outside** the workspace still work. |
 
-![Restricted Mode behavior](./images/restricted-mode.png)
+If this is your own project and you expect its renderers to work, trust the workspace. If you only want to inspect a third-party repository safely, keep it restricted.
 
 If you want previews to work in any workspace without trusting it, keep them outside the workspace and configure them in your **user** settings.
 

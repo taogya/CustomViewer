@@ -1,4 +1,4 @@
-// Trace: FR-012, FR-013, FR-014, FR-015, FR-016, FR-018, FR-019, AC-001, AC-003, AC-004, AC-005, AC-014
+// Trace: FR-012, FR-013, FR-014, FR-015, FR-016, FR-018, FR-019, FR-032, AC-001, AC-003, AC-004, AC-005, AC-014, AC-015, AC-016
 import * as assert from "assert";
 import * as vscode from "vscode";
 
@@ -115,6 +115,137 @@ suite("previewManager", () => {
     assert.strictEqual(rerender.type, "rerender");
     assert.strictEqual(rerender.payload.savedTextContent, "updated content");
   });
+
+  test("navigates supported source-relative text links inside the current preview session", async () => {
+    const window = new FakeWindow();
+    const fileUri = vscode.Uri.file("/tmp/repo/docs/example.md");
+    const openedDocuments: string[] = [];
+    const workspaceFolder = { name: "repo", index: 0, uri: vscode.Uri.file("/tmp/repo") } as vscode.WorkspaceFolder;
+    const targetUri = vscode.Uri.file("/tmp/repo/README.md");
+
+    window.activeTextEditor = {
+      document: { uri: fileUri, fileName: fileUri.fsPath },
+      viewColumn: vscode.ViewColumn.One
+    };
+
+    const manager = createManager(window, {
+      resolveForExtension: async () => ({ renderers: [createRenderer("docs", "md")], issues: [] }),
+      readTextFile: async (uri) => {
+        if (uri.fsPath.endsWith("index.html")) {
+          return "<!DOCTYPE html><html><head></head><body></body></html>";
+        }
+
+        if (uri.toString() === fileUri.toString()) {
+          return "# Example";
+        }
+
+        if (uri.toString() === targetUri.toString()) {
+          return "# Readme";
+        }
+
+        return "saved content";
+      },
+      resourceExists: async () => true,
+      openTextDocument: async (uri) => {
+        openedDocuments.push(uri.toString());
+      },
+      getWorkspaceFolder: () => workspaceFolder
+    });
+
+    await manager.openDefaultPreview();
+    await window.lastPanel?.webview.emit({ type: "renderer-ready" });
+    await window.lastPanel?.webview.emit({ type: "open-link", href: "../README.md" });
+
+    const rerender = window.lastPanel?.webview.messages[1] as {
+      type: string;
+      payload: { fileName: string | null; savedTextContent: string | null };
+    };
+
+    assert.strictEqual(rerender.type, "rerender");
+    assert.strictEqual(rerender.payload.fileName, "README.md");
+    assert.strictEqual(rerender.payload.savedTextContent, "# Readme");
+    assert.strictEqual(window.lastPanel?.title, "docs: README.md");
+    assert.deepStrictEqual(openedDocuments, []);
+
+    window.activeTextEditor = {
+      document: { uri: targetUri, fileName: targetUri.fsPath },
+      viewColumn: vscode.ViewColumn.One
+    };
+
+    await manager.openDefaultPreview();
+
+    assert.strictEqual(window.createdPanels.length, 1);
+    assert.strictEqual(window.lastPanel?.revealCount, 1);
+  });
+
+  test("falls back to opening the editor for unsupported source-relative text links", async () => {
+    const window = new FakeWindow();
+    const fileUri = vscode.Uri.file("/tmp/repo/docs/example.md");
+    const openedDocuments: string[] = [];
+    const workspaceFolder = { name: "repo", index: 0, uri: vscode.Uri.file("/tmp/repo") } as vscode.WorkspaceFolder;
+
+    window.activeTextEditor = {
+      document: { uri: fileUri, fileName: fileUri.fsPath },
+      viewColumn: vscode.ViewColumn.One
+    };
+
+    const manager = createManager(window, {
+      resolveForExtension: async () => ({ renderers: [createRenderer("docs", "md")], issues: [] }),
+      resourceExists: async () => true,
+      openTextDocument: async (uri) => {
+        openedDocuments.push(uri.toString());
+      },
+      getWorkspaceFolder: () => workspaceFolder
+    });
+
+    await manager.openDefaultPreview();
+    await window.lastPanel?.webview.emit({ type: "renderer-ready" });
+    await window.lastPanel?.webview.emit({ type: "open-link", href: "../notes.txt" });
+
+    assert.deepStrictEqual(openedDocuments, [vscode.Uri.file("/tmp/repo/notes.txt").toString()]);
+    assert.strictEqual(window.lastPanel?.webview.messages.length, 1);
+  });
+
+  test("resolves source-relative images to webview URIs inside the allowed source root", async () => {
+    const window = new FakeWindow();
+    const fileUri = vscode.Uri.file("/tmp/repo/docs/example.md");
+    const workspaceFolder = { name: "repo", index: 0, uri: vscode.Uri.file("/tmp/repo") } as vscode.WorkspaceFolder;
+
+    window.activeTextEditor = {
+      document: { uri: fileUri, fileName: fileUri.fsPath },
+      viewColumn: vscode.ViewColumn.One
+    };
+
+    const manager = createManager(window, {
+      resolveForExtension: async () => ({ renderers: [createRenderer("docs", "md")], issues: [] }),
+      resourceExists: async () => true,
+      getWorkspaceFolder: () => workspaceFolder
+    });
+
+    await manager.openDefaultPreview();
+    await window.lastPanel?.webview.emit({ type: "renderer-ready" });
+    await window.lastPanel?.webview.emit({ type: "resolve-image", requestId: "img-1", href: "./images/overview.png" });
+
+    const localResourceRoots = window.lastPanel?.webview.options?.localResourceRoots?.map((uri: vscode.Uri) => uri.toString());
+
+    assert.deepStrictEqual(
+      localResourceRoots,
+      [
+        vscode.Uri.file("/tmp/docs").toString(),
+        vscode.Uri.file("/tmp/extension/media").toString(),
+        workspaceFolder.uri.toString()
+      ]
+    );
+
+    const resolveMessage = window.lastPanel?.webview.messages[1] as {
+      type: string;
+      requestId: string;
+      resolvedUri: string | null;
+    };
+    assert.strictEqual(resolveMessage.type, "resolve-image-result");
+    assert.strictEqual(resolveMessage.requestId, "img-1");
+    assert.strictEqual(resolveMessage.resolvedUri, vscode.Uri.file("/tmp/repo/docs/images/overview.png").toString());
+  });
 });
 
 function createManager(window: FakeWindow, overrides: Partial<ManagerOverrides> = {}): PreviewManager {
@@ -123,14 +254,20 @@ function createManager(window: FakeWindow, overrides: Partial<ManagerOverrides> 
   const readTextFile = overrides.readTextFile ?? (async (uri) => uri.fsPath.endsWith("index.html")
     ? "<!DOCTYPE html><html><head></head><body></body></html>"
     : "saved content");
+  const resourceExists = overrides.resourceExists ?? (async () => true);
+  const openTextDocument = overrides.openTextDocument ?? (async () => undefined);
+  const getWorkspaceFolder = overrides.getWorkspaceFolder ?? (() => undefined);
 
   return new PreviewManager({
     extensionUri: vscode.Uri.file("/tmp/extension"),
     window,
     getIsTrusted: () => true,
+    getWorkspaceFolder,
     resolveForExtension,
     resolveAll,
     readTextFile,
+    resourceExists,
+    openTextDocument,
     buildDocument: ({ rawHtml }) => rawHtml
   });
 }
@@ -151,6 +288,9 @@ interface ManagerOverrides {
   resolveForExtension(): Promise<ResolutionResult>;
   resolveAll(): Promise<ResolutionResult>;
   readTextFile(uri: vscode.Uri): Promise<string>;
+  resourceExists(uri: vscode.Uri): Promise<boolean>;
+  openTextDocument(uri: vscode.Uri): Promise<void>;
+  getWorkspaceFolder(uri: vscode.Uri): vscode.WorkspaceFolder | undefined;
 }
 
 class FakeWindow implements WindowLike {
@@ -162,8 +302,13 @@ class FakeWindow implements WindowLike {
     return this.createdPanels[this.createdPanels.length - 1];
   }
 
-  public createWebviewPanel(_viewType: string, title: string): FakePanel {
-    const panel = new FakePanel(title);
+  public createWebviewPanel(
+    _viewType: string,
+    title: string,
+    _showOptions: vscode.ViewColumn,
+    options: vscode.WebviewOptions & vscode.WebviewPanelOptions
+  ): FakePanel {
+    const panel = new FakePanel(title, options);
     this.createdPanels.push(panel);
     return panel;
   }
@@ -185,7 +330,9 @@ class FakePanel implements WebviewPanelLike {
   public revealCount = 0;
   private disposeListener: (() => void) | undefined;
 
-  public constructor(public title: string) {}
+  public constructor(public title: string, options?: vscode.WebviewOptions) {
+    this.webview.options = options;
+  }
 
   public reveal(): void {
     this.revealCount += 1;
@@ -202,7 +349,7 @@ class FakePanel implements WebviewPanelLike {
 class FakeWebview implements WebviewLike {
   public html = "";
   public cspSource = "vscode-webview://fake";
-  public options = undefined;
+  public options: vscode.WebviewOptions | undefined = undefined;
   public readonly messages: unknown[] = [];
   private listener: ((message: unknown) => void) | undefined;
 
