@@ -1,0 +1,126 @@
+{
+  "name": "customviewer",
+  "displayName": "%extension.displayName%",
+  "description": "%extension.description%",
+  "version": "0.0.1",
+  "publisher": "taogya",
+  "license": "BSD-3-Clause",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/taogya/CustomViewer.git"
+  },
+  "engines": {
+    "vscode": "^1.88.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./out/src/extension.js",
+  "activationEvents": [
+    "onCommand:customViewer.openDefaultPreview",
+    "onCommand:customViewer.chooseRendererPreview",
+    "onCommand:customViewer.openRendererStandalone",
+    "onCommand:customViewer.rerenderPreview"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": "limited",
+      "description": "%capabilities.untrustedWorkspaces.description%",
+      "restrictedConfigurations": [
+        "customViewer.extensionRendererMap",
+        "customViewer.rendererRoots"
+      ]
+    }
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "customViewer.openDefaultPreview",
+        "title": "%commands.openDefaultPreview.title%",
+        "category": "%commands.category%"
+      },
+      {
+        "command": "customViewer.chooseRendererPreview",
+        "title": "%commands.chooseRendererPreview.title%",
+        "category": "%commands.category%"
+      },
+      {
+        "command": "customViewer.openRendererStandalone",
+        "title": "%commands.openRendererStandalone.title%",
+        "category": "%commands.category%"
+      },
+      {
+        "command": "customViewer.rerenderPreview",
+        "title": "%commands.rerenderPreview.title%",
+        "category": "%commands.category%"
+      }
+    ],
+    "configuration": {
+      "title": "%configuration.title%",
+      "properties": {
+        "customViewer.extensionRendererMap": {
+          "type": "object",
+          "default": {},
+          "scope": "resource",
+          "markdownDescription": "%configuration.extensionRendererMap.markdownDescription%"
+        },
+        "customViewer.rendererRoots": {
+          "type": "array",
+          "default": [],
+          "scope": "resource",
+          "items": {
+            "type": "string"
+          },
+          "markdownDescription": "%configuration.rendererRoots.markdownDescription%"
+        }
+      }
+    },
+    "menus": {
+      "editor/title": [
+        {
+          "command": "customViewer.openDefaultPreview",
+          "group": "navigation@10",
+          "when": "resourceScheme == file || resourceScheme == vscode-remote"
+        },
+        {
+          "command": "customViewer.chooseRendererPreview",
+          "group": "navigation@11",
+          "when": "resourceScheme == file || resourceScheme == vscode-remote"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "customViewer.openDefaultPreview",
+        "key": "ctrl+alt+v",
+        "mac": "cmd+alt+v",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "customViewer.rerenderPreview",
+        "key": "ctrl+alt+r",
+        "mac": "cmd+alt+r",
+        "when": "editorTextFocus || activeEditor == customViewer.preview"
+      }
+    ]
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile",
+    "test": "node ./out/test/runTest.js",
+    "package:vsix": "vsce package"
+  },
+  "devDependencies": {
+    "@types/jsdom": "^21.1.7",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^22.15.30",
+    "@types/vscode": "^1.88.0",
+    "@vscode/test-electron": "^2.5.2",
+    "glob": "^11.0.2",
+    "jsdom": "^26.1.0",
+    "mocha": "^11.2.2",
+    "typescript": "^5.8.3",
+    "vsce": "^2.15.0"
+  }
+}

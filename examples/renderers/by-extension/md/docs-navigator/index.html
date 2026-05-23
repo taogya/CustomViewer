@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<!-- Trace: FR-026, FR-028, AC-010 -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'; img-src 'self' data:;">
+  <title>Docs Navigator</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-head">
+        <p class="eyebrow">Markdown Sample</p>
+        <h1>Docs Navigator</h1>
+      </div>
+      <label class="search-field">
+        <span>Search</span>
+        <input id="search" type="search" placeholder="Find heading or text">
+      </label>
+      <nav id="nav" class="nav-list" aria-label="Document sections"></nav>
+    </aside>
+
+    <main class="content">
+      <header class="content-head">
+        <div>
+          <p class="eyebrow">Preview</p>
+          <h2 id="document-title">handbook.md</h2>
+        </div>
+        <p id="result-summary" class="result-summary"></p>
+      </header>
+      <section id="sections" class="sections"></section>
+    </main>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>

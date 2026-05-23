@@ -1,0 +1,7 @@
+{
+  "contractVersion": 1,
+  "id": "rich-inspector",
+  "displayName": "Rich Inspector",
+  "description": "JSON preview sample with rich cards, element filters, and search.",
+  "supportedExtensions": ["json"]
+}

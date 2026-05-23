@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<!-- Trace: FR-026, FR-030, AC-012 -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'; img-src 'self' data:;">
+  <title>Function Browser</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <p class="eyebrow">C Sample</p>
+      <h1>Function Browser</h1>
+      <p class="sidebar-copy">Browse extracted functions and expand each implementation block.</p>
+      <nav id="function-list" class="function-list" aria-label="C function list"></nav>
+    </aside>
+
+    <main class="content">
+      <header class="content-head">
+        <div>
+          <p class="eyebrow">Preview</p>
+          <h2 id="source-name">sample.c</h2>
+        </div>
+        <p id="summary" class="summary"></p>
+      </header>
+      <section id="functions" class="functions"></section>
+    </main>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>

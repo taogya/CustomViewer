@@ -1,0 +1,13 @@
+{
+  "extension.displayName": "CustomViewer",
+  "extension.description": "Map file extensions to custom HTML renderers and preview them in VS Code.",
+  "capabilities.untrustedWorkspaces.description": "CustomViewer only enables safe user-scoped renderers outside the workspace in Restricted Mode.",
+  "commands.category": "CustomViewer",
+  "commands.openDefaultPreview.title": "CustomViewer: Open Default Preview",
+  "commands.chooseRendererPreview.title": "CustomViewer: Choose Renderer Preview",
+  "commands.openRendererStandalone.title": "CustomViewer: Open Renderer Standalone",
+  "commands.rerenderPreview.title": "CustomViewer: Rerender Preview",
+  "configuration.title": "CustomViewer",
+  "configuration.extensionRendererMap.markdownDescription": "Maps normalized file extensions to ordered renderer entries. Each entry must include `id` and `path`.",
+  "configuration.rendererRoots.markdownDescription": "Lists renderer root folders used for convention-based discovery under `by-extension/<extension>/<renderer-id>/`."
+}

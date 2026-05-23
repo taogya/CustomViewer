@@ -1,0 +1,7 @@
+{
+  "contractVersion": 1,
+  "id": "function-browser",
+  "displayName": "Function Browser",
+  "description": "C source preview sample with function list and collapsible code sections.",
+  "supportedExtensions": ["c"]
+}

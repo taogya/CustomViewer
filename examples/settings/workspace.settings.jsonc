@@ -1,0 +1,31 @@
+{
+  // Trace: FR-026, FR-027, AC-009
+  "customViewer.extensionRendererMap": {
+    "md": [
+      {
+        "id": "docs-navigator",
+        "displayName": "Docs Navigator",
+        "path": "${workspaceFolder}/examples/renderers/by-extension/md/docs-navigator"
+      }
+    ],
+    "json": [
+      {
+        "id": "rich-inspector",
+        "displayName": "Rich Inspector",
+        "path": "${workspaceFolder}/examples/renderers/by-extension/json/rich-inspector"
+      }
+    ],
+    "c": [
+      {
+        "id": "function-browser",
+        "displayName": "Function Browser",
+        "path": "${workspaceFolder}/examples/renderers/by-extension/c/function-browser"
+      }
+    ]
+  },
+
+  // Trace: FR-003, FR-004, FR-027, AC-009
+  "customViewer.rendererRoots": [
+    "${workspaceFolder}/examples/renderers"
+  ]
+}

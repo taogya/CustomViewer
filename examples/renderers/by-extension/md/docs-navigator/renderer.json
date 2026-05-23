@@ -1,0 +1,7 @@
+{
+  "contractVersion": 1,
+  "id": "docs-navigator",
+  "displayName": "Docs Navigator",
+  "description": "Markdown preview sample with heading navigation and text search.",
+  "supportedExtensions": ["md"]
+}

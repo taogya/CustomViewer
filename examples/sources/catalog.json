@@ -1,0 +1,55 @@
+{
+  "title": "Renderer Catalog",
+  "items": [
+    {
+      "id": "doc-100",
+      "type": "document",
+      "status": "active",
+      "title": "Architecture Overview",
+      "owner": "platform",
+      "tags": ["renderer", "navigation", "docs"],
+      "priority": 1,
+      "summary": "High level architecture notes for the preview host."
+    },
+    {
+      "id": "cfg-210",
+      "type": "config",
+      "status": "draft",
+      "title": "Workspace Renderer Settings",
+      "owner": "tooling",
+      "tags": ["settings", "workspace", "preview"],
+      "priority": 2,
+      "summary": "Example configuration mapping extensions to renderers."
+    },
+    {
+      "id": "log-404",
+      "type": "log",
+      "status": "archived",
+      "title": "Migration Trace",
+      "owner": "ops",
+      "tags": ["trace", "history", "events"],
+      "priority": 3,
+      "summary": "Archived migration data for renderer rollout."
+    },
+    {
+      "id": "api-330",
+      "type": "api",
+      "status": "active",
+      "title": "Renderer Bootstrap Payload",
+      "owner": "platform",
+      "tags": ["payload", "bootstrap", "search"],
+      "priority": 1,
+      "summary": "Data contract for the first render message into the webview."
+    },
+    {
+      "id": "doc-220",
+      "type": "document",
+      "status": "active",
+      "title": "Testing Playbook",
+      "owner": "qa",
+      "tags": ["tests", "traceability", "renderer"],
+      "priority": 2,
+      "summary": "Automated verification matrix for renderer behavior."
+    }
+  ]
+}

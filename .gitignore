@@ -1,0 +1,10 @@
+node_modules/
+dist/
+out/
+*.vsix
+.DS_Store
+.vscode-test/
+.flowrunner/
+tmp/
+.vscode/
+.venv/
