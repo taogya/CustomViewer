@@ -149,9 +149,6 @@ Start from this structure and fill in the body:
 </html>
 ```
 
-# Deliverable
-Return the four files in full, each in its own fenced code block labeled
-with its filename. Do not add any other files.
 ````
 
 ---
