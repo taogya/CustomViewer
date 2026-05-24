@@ -18,6 +18,7 @@ files it needs). CustomViewer loads that HTML inside a sandboxed WebView and
 delivers the opened file's content as a JSON payload.
 
 Before sending this prompt, edit only the Settings section below. Leave the rest of the prompt unchanged unless you have a specific reason to modify it.
+If there are multiple settings, create a renderer that scales with the number of settings.
 
 # Settings
 Treat this section as the single source of truth. Copy these values exactly into the folder name, `renderer.json`, `<title>`, and description.
